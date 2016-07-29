@@ -1,0 +1,8 @@
+<h1>Matchweek #<%= @matchweek.week %> | Status: <%= @matchweek.status %></h1>
+<p><%= link_to "Activate Matchweek", activate_matchweek_path(@matchweek), method: :post %></p>
+<p><%= link_to "Lock Matchweek", lock_matchweek_path(@matchweek), method: :post %></p>
+<p><%= link_to "Archive Matchweek", archive_matchweek_path(@matchweek), method: :post %></p>
+<% @fixtures.each do |f| %>
+	<p>Fixture # <%= f.id %></p>
+	<%= link_to "Update Fixture", edit_fixture_path(f) %>
+<% end %>

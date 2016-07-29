@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PremPickEm</title>
+    <%= csrf_meta_tags %>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <nav>
+      <h1><%= link_to "Prem Pick 'Em", root_path %></h1>
+      <% if current_user.admin %>
+        <p><%= link_to "Admin", matchweeks_path %></p>
+      <% end %>
+      <% if user_signed_in? %>
+        <p><%= link_to "Log Out", destroy_user_session_path, method: :delete %></p>
+      <% end %>
+    </nav>
+    <div class="app-container">
+    	<p class="notice"><%= flash[:notice] %></p>
+      <p class="alert"><%= flash[:alert] %></p>
+
+      <%= yield %>
+    </div>
+  </body>
+</html>

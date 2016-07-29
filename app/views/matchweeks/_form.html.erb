@@ -1,0 +1,8 @@
+<%= form_for @matchweek do |f| %>
+  <%= f.label :week %>:
+  <%= f.text_field :week, :required => true %><br />
+
+  <%= f.select(:status, Matchweek.statuses.keys.map {|status| [status.titleize,status]}) %>
+
+  <%= f.submit %>
+<% end %>

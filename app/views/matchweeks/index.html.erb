@@ -1,0 +1,10 @@
+<h1>All Matchweeks for this season</h1>
+
+<%= button_to "Add Matchweek", new_matchweek_path %>
+
+All Matchweeks
+<ul>
+	<% @matchweeks.each do |m| %>
+		<li><%= link_to "Matchweek # #{m.week}: #{m.status}", matchweek_path(m.id) %></li>
+	<% end %>
+</ul>
