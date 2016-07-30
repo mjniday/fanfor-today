@@ -1,8 +1,10 @@
 <h1>Matchweek #<%= @matchweek.week %> | Status: <%= @matchweek.status %></h1>
-<p><%= link_to "Activate Matchweek", activate_matchweek_path(@matchweek), method: :post %></p>
-<p><%= link_to "Lock Matchweek", lock_matchweek_path(@matchweek), method: :post %></p>
-<p><%= link_to "Archive Matchweek", archive_matchweek_path(@matchweek), method: :post %></p>
+<p><%= link_to "Activate Matchweek", activate_matchweek_path(@matchweek), method: :post %> |
+<%= link_to "Lock Matchweek", lock_matchweek_path(@matchweek), method: :post %> |
+<%= link_to "Archive Matchweek", archive_matchweek_path(@matchweek), method: :post %></p>
 <% @fixtures.each do |f| %>
-	<p>Fixture # <%= f.id %></p>
-	<%= link_to "Update Fixture", edit_fixture_path(f) %>
+	<p>Fixture # <%= f.id %><%= " | #{Team.find(f.home_team_id).name} vs #{Team.find(f.away_team_id).name}" %></p>
+	<%= link_to "Update Fixture", edit_matchweek_fixture_path(@matchweek,f) %>
 <% end %>
+
+<%= link_to "Create Fixture", new_matchweek_fixture_path(params[:id]) %>

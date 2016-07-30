@@ -14,10 +14,10 @@ class FixturesController < ApplicationController
 			picked_teams = current_user.picks.pluck(:team_id).map{|t| Team.find(t)}
 			@remaining_teams = all_teams - picked_teams
 		elsif Matchweek.find_by(:status => :locked)
-			locked_matchweek = Matchweek.find_by(:status => :locked)
+			@locked_matchweek = Matchweek.find_by(:status => :locked)
 
-			if locked_matchweek.picks.find_by(:user_id => current_user)
-				@locked_pick = Team.find(locked_matchweek.picks.find_by(:user_id => current_user).team_id).name
+			if @locked_matchweek.picks.find_by(:user_id => current_user)
+				@locked_pick = Team.find(@locked_matchweek.picks.find_by(:user_id => current_user).team_id).name
 			else
 				@locked_pick = "You didn't make a selection this week"
 			end
@@ -26,7 +26,14 @@ class FixturesController < ApplicationController
 		end
 
 		# Current fixture list
-		@fixtures = Fixture.where(:matchweek_id => @active_matchweek)
+		if @active_matchweek
+			@fixtures = @active_matchweek.fixtures
+		elsif @locked_matchweek
+			@fixtures = @locked_matchweek.fixtures
+		else
+			@fixtures = []
+		end
+				
 
 		# My historical picks
 		@picks = current_user.picks.all
@@ -35,12 +42,31 @@ class FixturesController < ApplicationController
 		@users = User.all
 	end
 
+	def new
+		@matchweek = Matchweek.find(params[:matchweek_id])
+		@fixture = @matchweek.fixtures.new
+	end
+
+	def create
+		@matchweek = Matchweek.find(params[:matchweek_id])
+		Rails.logger.info("Matchweek = #{@matchweek}")
+		@fixture = @matchweek.fixtures.new(fixture_params)
+		if @fixture.save
+			redirect_to @matchweek
+		else
+			render 'edit'
+			Rails.logger.info(@fixture.errors.inspect) 
+		end
+	end
+
 	def edit
-		@fixture = Fixture.find(params[:id])
+		@matchweek = Matchweek.find(params[:matchweek_id])
+		@fixture = @matchweek.fixtures.find(params[:id])
 	end
 
 	def update
-	    @fixture = Fixture.find(params[:id])
+		@matchweek = Matchweek.find(params[:matchweek_id])
+	    @fixture = @matchweek.fixtures.find(params[:id])
 	    if @fixture.update_attributes(fixture_params)
 	    	flash[:success] = "Fixture updated"
       		redirect_to '/matchweeks'
@@ -51,6 +77,6 @@ class FixturesController < ApplicationController
 
   	private
   	def fixture_params
-  		params.require(:fixture).permit(:home_team_score,:away_team_score)
+  		params.require(:fixture).permit(:home_team_id,:home_team_score,:away_team_score,:away_team_id,:matchweek_id)
   	end
 end

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :fixtures
   resources :picks
   resources :matchweeks do
+    resources :fixtures
   	member do
   		post 'activate'
       post 'lock'

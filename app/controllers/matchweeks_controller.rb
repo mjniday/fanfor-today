@@ -13,7 +13,7 @@ class MatchweeksController < ApplicationController
 		if @matchweek.save
 			redirect_to @matchweek
 		else
-			rener 'create'
+			render 'edit'
 		end
 	end
 
