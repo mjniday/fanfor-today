@@ -69,7 +69,7 @@ class FixturesController < ApplicationController
 	    @fixture = @matchweek.fixtures.find(params[:id])
 	    if @fixture.update_attributes(fixture_params)
 	    	flash[:success] = "Fixture updated"
-      		redirect_to '/matchweeks'
+      		redirect_to @matchweek
 	    else
 	     	render 'edit'
     	end
@@ -77,6 +77,6 @@ class FixturesController < ApplicationController
 
   	private
   	def fixture_params
-  		params.require(:fixture).permit(:home_team_id,:home_team_score,:away_team_score,:away_team_id,:matchweek_id)
+  		params.require(:fixture).permit(:home_team_id,:home_team_score,:away_team_score,:away_team_id,:matchweek_id,:external_id)
   	end
 end

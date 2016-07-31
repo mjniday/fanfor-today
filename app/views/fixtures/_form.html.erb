@@ -1,4 +1,4 @@
-<%= form_for(@fixture, :url => matchweek_fixture_path(@matchweek)) do |f| %>
+<%= form_for([@fixture.matchweek,@fixture]) do |f| %>
 	<%= f.collection_select :home_team_id, Team.all, :id, :name %>
 
   	<%= f.label :home_team_score %>:

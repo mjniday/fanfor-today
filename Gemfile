@@ -29,6 +29,10 @@ gem 'jbuilder', '~> 2.5'
 
 # Authentication
 gem 'devise'
+
+# HTTParty
+gem 'httparty'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
