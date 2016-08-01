@@ -2,7 +2,6 @@
 
 <%= link_to "Add Matchweek", new_matchweek_path %>
 
-All Matchweeks
 <ul>
 	<% @matchweeks.each do |m| %>
 		<li><%= link_to "Matchweek # #{m.week}: #{m.status}", matchweek_path(m.id) %></li>
