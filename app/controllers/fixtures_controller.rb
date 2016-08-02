@@ -12,7 +12,8 @@ class FixturesController < ApplicationController
 			all_teams = team_ids.map{|t| Team.find(t)}
 			# remove teams I've picked in previous matchweeks
 			picked_teams = current_user.picks.pluck(:team_id).map{|t| Team.find(t)}
-			@remaining_teams = all_teams - picked_teams
+			remaining_teams = all_teams - picked_teams
+			@remaining_teams = remaining_teams.sort_by{|t| t[:name]}
 		elsif Matchweek.find_by(:status => :locked)
 			@locked_matchweek = Matchweek.find_by(:status => :locked)
 
