@@ -29,6 +29,7 @@ gem 'jbuilder', '~> 2.5'
 
 # Authentication
 gem 'devise'
+gem 'devise_invitable'
 
 # HTTParty
 gem 'httparty'

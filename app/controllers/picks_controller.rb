@@ -6,14 +6,9 @@ class PicksController < ApplicationController
 	def create
 		@pick = get_active_matchweek.picks.new(pick_params.merge(:fixture_id => get_fixture_id(pick_params[:team_id])))
 		if @pick.save
-			redirect_to '/'
+			redirect_back fallback_location: { action: "index" }
 		else
-			redirect_to '/'
-		end
-		puts pick_params.keys
-		pick_params.each do |k|
-			puts k
-			puts pick_params[k]
+			redirect_back fallback_location: { action: "index" }
 		end
 		Rails.logger.info(@pick.errors.inspect) 
 	end
@@ -21,7 +16,7 @@ class PicksController < ApplicationController
 	def destroy
 		Pick.find(params[:id]).destroy
 		flash[:success] = "Pick removed"
-		redirect_to '/'
+		redirect_back fallback_location: { action: "index" }
 	end
 
 	private
