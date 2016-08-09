@@ -14,6 +14,7 @@
 					<div class="styled-select">
 						<%= form_for(Pick.new) do |f| %>
 						  <%= f.collection_select :team_id, @remaining_teams, :id, :name %>
+						  <%= f.number_field :league_id, :value => @league.id, hidden: true %>
 						  <%= f.submit "Select Team" %>
 						<% end %>
 					</div>
@@ -82,15 +83,15 @@
 			<% @users.each do |user| %>
 				<tr>
 					<td><%= user.username == nil ? user.email : user.username %></td>
-					<td><%= user.picks.pluck(:result_points).sum %></td>
-					<td><%= user.picks.pluck(:result_gd).sum %></td>
+					<td><%= @league.picks.where(:user_id => user.id).pluck(:result_points).sum %></td>
+					<td><%= @league.picks.where(:user_id => user.id).pluck(:result_gd).sum %></td>
 				</tr>
 			<% end %>
 			</tbody>
 		</table>
 		<%= form_for(User.new, :url => invite_user_league_path) do |f| %>
-		  <%= f.text_field :email, :required => true %><br />
-		  <%= f.submit "Select Team" %>
+		  <%= f.text_field :email, :required => true, :placeholder => "Invite new user" %><br />
+		  <%= f.submit "Send Invite" %>
 		<% end %>
 	</div>
 </div>

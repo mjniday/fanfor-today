@@ -1,5 +1,5 @@
 class Fixture < ApplicationRecord
-	before_save :update_scores
+	after_save :update_scores
 	# before_save :calculate_results
 	has_many :picks
 	belongs_to :matchweek

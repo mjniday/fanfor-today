@@ -4,7 +4,7 @@ class PicksController < ApplicationController
 	end
 
 	def create
-		@pick = get_active_matchweek.picks.new(pick_params.merge(:fixture_id => get_fixture_id(pick_params[:team_id])))
+		@pick = get_active_matchweek.picks.new(pick_params.merge(:fixture_id => get_fixture_id(pick_params[:team_id]),:league_id => params[:pick][:league_id]))
 		if @pick.save
 			redirect_back fallback_location: { action: "index" }
 		else
