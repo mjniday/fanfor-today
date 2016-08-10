@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       post 'invite_user'
     end
   end
-  # resources :fixtures
+
   resources :picks
   resources :matchweeks do
     resources :fixtures

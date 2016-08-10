@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160809014600) do
+ActiveRecord::Schema.define(version: 20160810021601) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "fixtures", force: :cascade do |t|
     t.integer  "home_team_id"
@@ -54,11 +57,11 @@ ActiveRecord::Schema.define(version: 20160809014600) do
     t.integer  "fixture_id"
     t.integer  "matchweek_id"
     t.integer  "league_id"
-    t.index ["fixture_id"], name: "index_picks_on_fixture_id"
-    t.index ["league_id"], name: "index_picks_on_league_id"
-    t.index ["matchweek_id"], name: "index_picks_on_matchweek_id"
-    t.index ["team_id"], name: "index_picks_on_team_id"
-    t.index ["user_id"], name: "index_picks_on_user_id"
+    t.index ["fixture_id"], name: "index_picks_on_fixture_id", using: :btree
+    t.index ["league_id"], name: "index_picks_on_league_id", using: :btree
+    t.index ["matchweek_id"], name: "index_picks_on_matchweek_id", using: :btree
+    t.index ["team_id"], name: "index_picks_on_team_id", using: :btree
+    t.index ["user_id"], name: "index_picks_on_user_id", using: :btree
   end
 
   create_table "teams", force: :cascade do |t|
@@ -70,7 +73,7 @@ ActiveRecord::Schema.define(version: 20160809014600) do
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: ""
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -91,11 +94,13 @@ ActiveRecord::Schema.define(version: 20160809014600) do
     t.string   "invited_by_type"
     t.integer  "invited_by_id"
     t.integer  "invitations_count",      default: 0
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
-    t.index ["invitations_count"], name: "index_users_on_invitations_count"
-    t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
+    t.index ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
+    t.index ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "picks", "teams"
+  add_foreign_key "picks", "users"
 end
