@@ -14,9 +14,9 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
-  # serve static assets so images show up
-  config.serve_static_assets = true
-  config.assets.compile = true
+  # # serve static assets so images show up
+  # config.serve_static_assets = true
+  # config.assets.compile = true
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
