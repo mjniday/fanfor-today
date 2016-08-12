@@ -58,7 +58,7 @@ Rails.application.configure do
 
   # This is a devise setting in each config environment
   # When deploying this code, change host to the actual url, not localhost
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: ENV['host'] }
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
@@ -97,9 +97,9 @@ Rails.application.configure do
     :authentication => :plain,
     :address => "smtp.mailgun.org",
     :port => 587,
-    :domain => "fanfor.today",
-    :user_name => "postmaster@fanfor.today",
-    :password => "474b6996cc3d571d64b6959d31b1a2d7"
+    :domain => ENV['domain'],
+    :user_name => ENV['user_name'],
+    :password => ENV['password']
   }
 
 

@@ -31,6 +31,9 @@ gem 'jbuilder', '~> 2.5'
 gem 'devise'
 gem 'devise_invitable'
 
+# Environment variables
+gem 'figaro'
+
 # HTTParty
 gem 'httparty'
 
