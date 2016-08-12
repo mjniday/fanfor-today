@@ -68,7 +68,7 @@ class LeaguesController < ApplicationController
 		email = params[:user][:email]
 		new_user = User.invite!(:email => email)
 		@league = League.find(params[:id])
-		league.users << new_user
+		@league.users << new_user
 		redirect_to @league
 	end
 
