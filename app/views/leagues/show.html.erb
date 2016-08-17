@@ -56,7 +56,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				<% @locked_matchweek.picks.each do |pick| %>
+				<% @locked_matchweek.picks.where(:league_id => @league.id).each do |pick| %>
 					<tr>
 						<td><%= pick.user.email %></td>
 						<td><%= Team.find(pick.team_id).name %></td>
