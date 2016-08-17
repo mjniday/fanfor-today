@@ -69,7 +69,9 @@ class MatchweeksController < ApplicationController
 			# Build the hash used to create a new fixture
 			fixture_data = {}
 			fixture_data['home_team_id'] = Team.find_by(:external_id => f['_links']['homeTeam']['href'].split("/")[-1]).id
+			fixture_data['home_team_score'] = f['result']['goalsHomeTeam']
 			fixture_data['away_team_id'] = Team.find_by(:external_id => f['_links']['awayTeam']['href'].split("/")[-1]).id
+			fixture_data['away_team_score'] = f['result']['goalsAwayTeam']
 			puts fixture_data
 
 			# Find the existing Fixture, or initialize a new one 

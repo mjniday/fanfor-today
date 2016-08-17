@@ -46,6 +46,26 @@
 			</tbody>
 		</table>
 
+		<% if @locked_matchweek %>
+			<h3>Who Picked this week?</h3>
+			<table>
+				<thead>
+					<tr>
+						<th>User</th>
+						<th>Selected Team</th>
+					</tr>
+				</thead>
+				<tbody>
+				<% @locked_matchweek.picks.each do |pick| %>
+					<tr>
+						<td><%= pick.user.email %></td>
+						<td><%= Team.find(pick.team_id).name %></td>
+					</tr>
+				<% end %>
+				</tbody>
+			</table>
+		<% end %>
+
 		<h3>My Previous Picks</h3>
 		<table>
 			<thead>
