@@ -102,9 +102,9 @@
 			<tbody>
 			<% @users.each do |user| %>
 				<tr>
-					<td><%= user.username == nil ? user.email : user.username %></td>
-					<td><%= @league.picks.where(:user_id => user.id).pluck(:result_points).sum %></td>
-					<td><%= @league.picks.where(:user_id => user.id).pluck(:result_gd).sum %></td>
+					<td><%= user[:username] == nil ? user[:email] : user[:username] %></td>
+					<td><%= user[:result_points] %></td>
+					<td><%= user[:result_gd] %></td>
 				</tr>
 			<% end %>
 			</tbody>

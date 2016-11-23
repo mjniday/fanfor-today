@@ -46,7 +46,7 @@ class LeaguesController < ApplicationController
 			@picks = @league.picks.where(:user_id => current_user)
 
 			# League Standings
-			@users = League.find(params[:id]).users
+			@users = get_standings.sort_by {|user| [-user[:result_points],-user[:result_gd]]}
 		end
 	end
 
@@ -72,8 +72,21 @@ class LeaguesController < ApplicationController
 		redirect_to @league
 	end
 
-  	private
+  private
   	def league_params
   		params.require(:league).permit(:name)
+  	end
+
+  	def get_standings
+  		league = League.find(params[:id])
+  		users = []
+  		league.users.each do |u|
+  			user_username = u.username
+  			user_email = u.email
+  			user_points = league.picks.where(:user_id => u.id).pluck(:result_points).sum
+  			user_gd = league.picks.where(:user_id => u.id).pluck(:result_gd).sum
+  			users.push({:username => user_username, :email => user_email, :result_points => user_points, :result_gd => user_gd})
+  		end
+  		users
   	end
 end
