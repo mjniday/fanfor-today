@@ -3,22 +3,30 @@
   <head>
     <title>PremPickEm</title>
     <%= csrf_meta_tags %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <!-- <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %> -->
+    <link rel="stylesheet" href="https://unpkg.com/tachyons@4.5.5/css/tachyons.min.css"/>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <nav>
-      <h1><%= link_to "Prem Pick 'Em", root_path %></h1>
-      <% if user_signed_in? %>
-        <% if current_user.admin %>
-          <p><%= link_to "Admin", matchweeks_path %></p>
+    <nav class="dt w-100 bg-green"> 
+      <div class="dtc w5 v-mid pa3">
+        <a href="/" class="f3 link dim black h2 pa1 border-box">
+          Fan for Today
+        </a>
+      </div>
+      <div class="dtc v-mid tr pa3">
+        <% if user_signed_in? %>
+          <% if current_user.admin %>
+            <%= link_to "Admin", matchweeks_path, class: "f6 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" %>
+          <% end %>
+          <%= link_to "Log Out", destroy_user_session_path, method: :delete, class: "f6 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" %>
         <% end %>
-        <p><%= link_to "Log Out", destroy_user_session_path, method: :delete %></p>
-      <% end %>
+      </div>
     </nav>
-    <div class="app-container">
+    <div class="ma3">
     	<p class="notice"><%= flash[:notice] %></p>
       <p class="alert"><%= flash[:alert] %></p>
 
