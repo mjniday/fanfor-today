@@ -1,117 +1,123 @@
-<div class="container">
-	<div class="main">
-		<h1>Premier League Fixtures</h1>
-		<div class="pick-container">
+<div class="cf">
+	<div class="fl w-100 w-70-l">
+		<h1 class="f3"><%= @league.name %></h1>
+		<div class="center mw7">
 			<% if @no_active_matchweek %>
 				<%= @no_active_matchweek %>
 			<% elsif @active_matchweek %>
-				<h3>Matchweek #<%= @active_matchweek.week %> Selection</h3>
+				<h1 class="f4">Matchweek #<%= @active_matchweek.week %> Selection</h1>
 				<% if @current_pick %>
-					<h3>You've chosen <%= Team.find(@current_pick.team_id).name %></h3>
-					<h4><%= Team.find(@current_pick.fixture.home_team_id).name %> versus <%= Team.find(@current_pick.fixture.away_team_id).name %></h4>
-					<p><%= button_to "Change Selection", pick_path(@current_pick.id), method: :delete %></p>
+					<div class="center mw6">
+						<h4 class="tc f5 black-70">This week you selected</h4>
+						<h2 class="tc f4"><%= Team.find(@current_pick.team_id).name %></h2>
+						<h4 class="tc f5 black-70"><%= Team.find(@current_pick.fixture.home_team_id).name %> versus <%= Team.find(@current_pick.fixture.away_team_id).name %></h4>
+						<div class="tc"><%= button_to "Change Selection", pick_path(@current_pick.id), method: :delete, :class => "bg-green white w-100 f5 pa2 mv2 br1 ba b--green pointer dim" %></div>
+					</div>
 				<% else %>
-					<div class="styled-select">
+					<div class="styled-select center mw6 br1">
 						<%= form_for(Pick.new) do |f| %>
-						  <%= f.collection_select :team_id, @remaining_teams, :id, :name %>
+						  <%= f.collection_select :team_id, @remaining_teams, :id, :name, {},{:class => "w-100 bg-transparent pa2 f4 input-reset pointer"} %>
 						  <%= f.number_field :league_id, :value => @league.id, hidden: true %>
-						  <%= f.submit "Select Team" %>
+						  <%= f.submit "Select Team", {:class => "bg-green white w-100 f5 pa2 mv2 br1 ba b--green pointer dim"} %>
 						<% end %>
 					</div>
 				<% end %>
 			<% elsif @locked_pick %>
-				<h3>Matchweek Locked</h3>
-				<%= @locked_pick %>
+				<h1 class="f4">Matchweek #<%= @locked_matchweek.week %> Locked</h1>
+				<h4 class="tc f5 black-70">This week you selected</h4>
+				<h2 class="tc f4"><%= @locked_pick %></h2>
 			<% end %>
 		</div>
-		<h3>Current Matchweek Fixtures:</h3>
-		<table>
-			<thead>
-				<tr>
-					<th>Home Team</th>
-					<th>Home Score</th>
-					<th>Away Score</th>
-					<th>Away Team</th>
-				</tr>
-			</thead>
-			<tbody>
+
+		<div class="center mw7 pt3">
+			<h1 class="f4">Current Matchweek Fixtures:</h1>
+			<div class="flex flex-row flex-wrap">
 				<% @fixtures.each do |f| %>
-					<tr>
-						<td><%= Team.find(f.home_team_id).name %></td>
-						<td><%= f.home_team_score %></td>
-						<td><%= f.away_team_score %></td>
-						<td><%= Team.find(f.away_team_id).name %></td>
-					</tr>
+					<div class="w-100 w-40-l mh4-l pa2 mt2 br1 shadow-2">
+						<div class="w-70 dib">
+							<div class="f5 black-70"><%= Team.find(f.home_team_id).name %></div>
+							<div class="f5 black-70 pt2"><%= Team.find(f.away_team_id).name %></div>
+						</div>
+						<div class="w-20 dib tr">
+							<div class="f5 black-70"><%= f.home_team_score ? f.home_team_score : "-" %></div>
+							<div class="f5 black-70 pt2"><%= f.away_team_score ? f.away_team_score : "-" %></div>
+						</div>
+					</div>
 				<% end %>
-			</tbody>
-		</table>
+			</div>
+		</div>
 
 		<% if @locked_matchweek %>
-			<h3>Who Picked this week?</h3>
-			<table>
-				<thead>
-					<tr>
-						<th>User</th>
-						<th>Selected Team</th>
-					</tr>
-				</thead>
-				<tbody>
-				<% @locked_matchweek.picks.where(:league_id => @league.id).each do |pick| %>
-					<tr>
-						<td><%= pick.user.email %></td>
-						<td><%= Team.find(pick.team_id).name %></td>
-					</tr>
-				<% end %>
-				</tbody>
-			</table>
+			<% @locked_matchweek.picks.where(:league_id => @league.id).each do |pick| %>	
+				<main class="pt3 mw7 center">
+					<h1 class="f4">This week's picks</h1>
+			    <article class="dt bb b--black-05 w-100 pb2 mt2" href="#0">
+			      <div class="dtc w2 w3-ns v-mid">
+			        <img src="" class="ba b--black-10 db br2 w2 w3-ns h2 h3-ns"/>
+			      </div>
+			      <div class="dtc v-mid pl3">
+			        <h1 class="f6 f5-ns fw6 lh-title black mv0"><%= pick.user.email %></h1>
+			      </div>
+			      <div class="dtc v-mid">
+			        <form class="w-100 tr">
+			          <h2 class="f5 bg-white pv1 black-60"><%= Team.find(pick.team_id).name %></h2>
+			        </form>
+			      </div>
+			    </article>
+	  		</main>
+  		<% end %>
 		<% end %>
 
-		<h3>My Previous Picks</h3>
-		<table>
-			<thead>
-				<tr>
-					<th>Matchweek</th>
-					<th>Selected Team</th>
-					<th>Points</th>
-					<th>GD Change</th>
-				</tr>
-			</thead>
-			<tbody>
-			<% @picks.each do |pick| %>
-				<tr>
-					<td><%= pick.matchweek_id %></td>
-					<td><%= Team.find(pick.team_id).name %></td>
-					<td><%= pick.result_points %></td>
-					<td><%= pick.result_gd %></td>
-				</tr>
-			<% end %>
-			</tbody>
-		</table>
+		<article class="pt3">
+		  <h1 class="f4 center mw7">My Previous Picks</h1>
+		  <ul class="list pl0 ml0 center mw7 ba b--light-silver br2">
+		  	<li class="bg-green white ph3 pv3 bb b--light-silver">
+		  		<span class="w-10 dib">Wk.</span>
+		    	<span class="w-60 dib">Selected Team</span>
+		    	<span class="w-10 dib tc">Pts.</span>
+		    	<span class="w-10 dib tc">GD</span>
+	    	</li>
+		  	<% @picks.each do |pick| %>
+		    <li class="ph3 pv3 bb b--light-silver">
+		    	<span class="w-10 dib"><%= pick.matchweek_id %></span>
+		    	<span class="w-60 dib"><%= Team.find(pick.team_id).name %></span>
+		    	<span class="w-10 dib tc"><%= pick.result_points %></span>
+		    	<span class="w-10 dib tc"><%= pick.result_gd %></span>
+	    	</li>
+	    	<% end %>
+		  </ul>
+		</article>
 	</div>
 
-	<div class="sidebar">
-		<h3>League Standings</h3>
-		<table>
-			<thead>
-				<tr>
-					<th>User</th>
-					<th>Points</th>
-					<th>GD</th>
-				</tr>
-			</thead>
-			<tbody>
-			<% @users.each do |user| %>
-				<tr>
-					<td><%= user[:username] == nil ? user[:email] : user[:username] %></td>
-					<td><%= user[:result_points] %></td>
-					<td><%= user[:result_gd] %></td>
-				</tr>
-			<% end %>
-			</tbody>
-		</table>
-		<%= form_for(User.new, :url => invite_user_league_path) do |f| %>
-		  <%= f.text_field :email, :required => true, :placeholder => "Invite new user" %><br />
-		  <%= f.submit "Send Invite" %>
-		<% end %>
+	<div class="fl w-100 w-30-l">
+		<article class="pt3">
+		  <h1 class="f4 center mw7">League Standings</h1>
+		  <ul class="list pl0 ml0 center mw7 ba b--light-silver br2">
+		  	<li class="bg-green white ph3 pv3 bb b--light-silver">
+		    	<span class="w-70 dib">Player</span>
+		    	<span class="w-10 dib tc">Pts.</span>
+		    	<span class="w-10 dib tc">GD</span>
+	    	</li>
+		  	<% @users.each do |user| %>
+		    <li class="ph3 pv3 bb b--light-silver">
+		    	<span class="w-70 dib"><%= user[:username] == nil ? user[:email] : user[:username] %></span>
+		    	<span class="w-10 dib tc"><%= user[:result_points] %></span>
+		    	<span class="w-10 dib tc"><%= user[:result_gd] %></span>
+	    	</li>
+	    	<% end %>
+		  </ul>
+		</article>
+
+		<div>
+		  <%= form_for(User.new, :url => invite_user_league_path, :html => {:class => "bg-purple mw7 center pa4 br2-ns ba b--black-10"}) do |f| %>
+		    <fieldset class="cf bn ma0 pa0">
+		      <legend class="pa0 f5 f4-ns mb3 black-80 white">Invite new player</legend>
+		      <div class="cf">
+		      	<%= f.text_field :email, :required => true, :placeholder => "player@example.com", class: "f6 f5-l input-reset bn fl black-80 bg-white pa3 lh-solid w-100 w-75-m w-100-l br2-ns br--left-ns" %>
+		        <%= f.submit "Send Invite", class: "f6 f5-l button-reset fl pv3 tc bn bg-animate bg-black-70 hover-bg-black white pointer w-100 w-25-m w-100-l br2-ns br--right-ns" %>
+		      </div>
+		    </fieldset>
+		   <% end %>
+		</div>
 	</div>
 </div>
