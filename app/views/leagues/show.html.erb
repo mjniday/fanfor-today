@@ -30,7 +30,7 @@
 		</div>
 
 		<div class="center mw7 pt3">
-			<h1 class="f4">Current Matchweek Fixtures:</h1>
+			<h1 class="f4">Current Matchweek Fixtures</h1>
 			<div class="flex flex-row flex-wrap">
 				<% @fixtures.each do |f| %>
 					<div class="w-100 w-40-l mh4-l pa2 mt2 br1 shadow-2">
@@ -46,6 +46,33 @@
 				<% end %>
 			</div>
 		</div>
+
+		<article class="pt3 mw7 center">
+		  <h1 class="f4 center mw7">Current Standings</h1>
+		  <ul class="list pl0 ml0 center mw7 ba b--light-silver br2">
+		  	<li class="bg-green white ph3 pv3 bb b--light-silver">
+		  		<span class="w2 dib"></span>
+		    	<span class="w-50 dib">Team</span>
+		    	<span class="w-10 dib">P</span>
+		    	<span class="w-10 dib tc">GD</span>
+		    	<span class="w-10 dib tc">Pts.</span>
+	    	</li>
+		  	<% @table.each do |team| %>
+		    <li class="ph3 pv3 bb b--light-silver">
+		    	<span class="w2 dib"><%= team['position'] %></span>
+		    	<div class="w-50 v-mid dib">
+		    		<span class="dib w-10">
+		    			<img class="v-mid h1 w1 h2-ns w2-ns" src=<%= team['crestURI'] %> />
+	    			</span>
+		    		<span class="v-mid f6 f5-ns w-80 truncate overflow-visible-ns dib di-ns"><%= team['teamName'] %></span>
+		    	</div>
+		    	<span class="black-70 w-10 dib"><%= team['playedGames'] %></span>
+		    	<span class="black-70 w-10 dib tc"><%= team['goalDifference'] %></span>
+		    	<span class="w-10 dib tc"><%= team['points'] %></span>
+	    	</li>
+	    	<% end %>
+		  </ul>
+		</article>
 
 		<% if @locked_matchweek %>
 			<% @locked_matchweek.picks.where(:league_id => @league.id).each do |pick| %>	
@@ -74,15 +101,15 @@
 		  	<li class="bg-green white ph3 pv3 bb b--light-silver">
 		  		<span class="w-10 dib">Wk.</span>
 		    	<span class="w-60 dib">Selected Team</span>
-		    	<span class="w-10 dib tc">Pts.</span>
 		    	<span class="w-10 dib tc">GD</span>
+		    	<span class="w-10 dib tc">Pts.</span>
 	    	</li>
 		  	<% @picks.each do |pick| %>
 		    <li class="ph3 pv3 bb b--light-silver">
 		    	<span class="w-10 dib"><%= pick.matchweek_id %></span>
 		    	<span class="w-60 dib"><%= Team.find(pick.team_id).name %></span>
+		    	<span class="black-70 w-10 dib tc"><%= pick.result_gd %></span>
 		    	<span class="w-10 dib tc"><%= pick.result_points %></span>
-		    	<span class="w-10 dib tc"><%= pick.result_gd %></span>
 	    	</li>
 	    	<% end %>
 		  </ul>
@@ -95,14 +122,14 @@
 		  <ul class="list pl0 ml0 center mw7 ba b--light-silver br2">
 		  	<li class="bg-green white ph3 pv3 bb b--light-silver">
 		    	<span class="w-70 dib">Player</span>
-		    	<span class="w-10 dib tc">Pts.</span>
 		    	<span class="w-10 dib tc">GD</span>
+		    	<span class="w-10 dib tc">Pts.</span>
 	    	</li>
 		  	<% @users.each do |user| %>
 		    <li class="ph3 pv3 bb b--light-silver">
 		    	<span class="w-70 dib"><%= user[:username] == nil ? user[:email] : user[:username] %></span>
+		    	<span class="black-70 w-10 dib tc"><%= user[:result_gd] %></span>
 		    	<span class="w-10 dib tc"><%= user[:result_points] %></span>
-		    	<span class="w-10 dib tc"><%= user[:result_gd] %></span>
 	    	</li>
 	    	<% end %>
 		  </ul>

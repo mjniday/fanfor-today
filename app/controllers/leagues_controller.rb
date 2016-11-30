@@ -46,8 +46,11 @@ class LeaguesController < ApplicationController
 			@picks = @league.picks.where(:user_id => current_user)
 
 			# League Standings
-			@users = get_standings.sort_by {|user| [-user[:result_points],-user[:result_gd]]}
+			@users = get_player_standings.sort_by {|user| [-user[:result_points],-user[:result_gd]]}
 		end
+
+    # League Table
+    @table = get_league_table
 	end
 
 	def new
@@ -73,20 +76,26 @@ class LeaguesController < ApplicationController
 	end
 
   private
-  	def league_params
-  		params.require(:league).permit(:name)
-  	end
+	def league_params
+		params.require(:league).permit(:name)
+	end
 
-  	def get_standings
-  		league = League.find(params[:id])
-  		users = []
-  		league.users.each do |u|
-  			user_username = u.username
-  			user_email = u.email
-  			user_points = league.picks.where(:user_id => u.id).pluck(:result_points).sum
-  			user_gd = league.picks.where(:user_id => u.id).pluck(:result_gd).sum
-  			users.push({:username => user_username, :email => user_email, :result_points => user_points, :result_gd => user_gd})
-  		end
-  		users
-  	end
+	def get_player_standings
+		league = League.find(params[:id])
+		users = []
+		league.users.each do |u|
+			user_username = u.username
+			user_email = u.email
+			user_points = league.picks.where(:user_id => u.id).pluck(:result_points).sum
+			user_gd = league.picks.where(:user_id => u.id).pluck(:result_gd).sum
+			users.push({:username => user_username, :email => user_email, :result_points => user_points, :result_gd => user_gd})
+		end
+		users
+	end
+
+  def get_league_table
+    url = "http://api.football-data.org/v1/competitions/426/leagueTable"
+    response = HTTParty.get(url,:headers => {"X-Auth-Token" => ENV['football_data']}).parsed_response
+    response['standing']
+  end
 end

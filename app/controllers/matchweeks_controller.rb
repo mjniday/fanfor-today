@@ -59,7 +59,7 @@ class MatchweeksController < ApplicationController
 	def populate_matchweek_fixtures
 		@matchweek = Matchweek.find(params[:id])
 		url = "http://api.football-data.org/v1/competitions/426/fixtures?matchday=#{@matchweek.week}"
-		response = HTTParty.get(url).parsed_response
+		response = HTTParty.get(url,:headers => {'X-Auth-Token' => ENV['football_data']}).parsed_response
 		fixture_list = response['fixtures']
 
 		fixture_list.each do |f|
