@@ -6,26 +6,26 @@
 <hr>
 
 <table>
-	<thead>
-		<tr>
-			<th>Fixture ID</th>
-			<th>Home Team</th>
-			<th></th>
-			<th>Away Team</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		<% @fixtures.each do |f| %>
-			<tr>
-				<td><%= f.id %></td>
-				<td><%= Team.find(f.home_team_id).name %></td>
-				<td>vs.</td>
-				<td><%= Team.find(f.away_team_id).name %></td>
-				<td><%= link_to "Update Fixture", edit_matchweek_fixture_path(@matchweek,f) %></td>
-			</tr>
-		<% end %>
-	</tbody>
+  <thead>
+    <tr>
+      <th>Fixture ID</th>
+      <th>Home Team</th>
+      <th></th>
+      <th>Away Team</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @fixtures.each do |f| %>
+      <tr>
+        <td><%= f.id %></td>
+        <td><%= Team.find(f.home_team_id).name %></td>
+        <td>vs.</td>
+        <td><%= Team.find(f.away_team_id).name %></td>
+        <td><%= link_to "Update Fixture", edit_matchweek_fixture_path(@matchweek,f) %></td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 
 <h4><%= link_to "Create Fixture", new_matchweek_fixture_path(params[:id]) %></h4>
