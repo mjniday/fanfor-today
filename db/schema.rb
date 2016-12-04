@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160810021601) do
+ActiveRecord::Schema.define(version: 20161204222032) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20160810021601) do
     t.integer  "matchweek_id"
     t.integer  "winner_id"
     t.integer  "external_id"
+    t.datetime "date"
   end
 
   create_table "league_users", force: :cascade do |t|

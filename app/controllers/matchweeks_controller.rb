@@ -72,7 +72,7 @@ class MatchweeksController < ApplicationController
       fixture_data['home_team_score'] = f['result']['goalsHomeTeam']
       fixture_data['away_team_id'] = Team.find_by(:external_id => f['_links']['awayTeam']['href'].split("/")[-1]).id
       fixture_data['away_team_score'] = f['result']['goalsAwayTeam']
-      puts fixture_data
+      fixture_data['date'] = Time.parse(f['date'])
 
       # Find the existing Fixture, or initialize a new one 
       # Initialize_by works like Class.new as opposed to Class.create. It doesn't save
