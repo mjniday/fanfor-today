@@ -75,9 +75,9 @@
     </article>
 
     <% if @locked_matchweek %>
-      <% @locked_matchweek.picks.where(:league_id => @league.id).each do |pick| %>  
-        <main class="pt3 mw7 center">
-          <h1 class="f4">This week's picks</h1>
+      <main class="pt3 mw7 center">
+        <h1 class="f4">This week's picks</h1>
+        <% @locked_matchweek.picks.where(:league_id => @league.id).each do |pick| %>
           <article class="dt bb b--black-05 w-100 pb2 mt2" href="#0">
             <div class="dtc w2 w3-ns v-mid">
               <img src="" class="ba b--black-10 db br2 w2 w3-ns h2 h3-ns"/>
@@ -91,8 +91,8 @@
               </form>
             </div>
           </article>
-        </main>
-      <% end %>
+        <% end %>
+      </main>
     <% end %>
 
     <article class="pt3">
