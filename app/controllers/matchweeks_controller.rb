@@ -45,12 +45,6 @@ class MatchweeksController < ApplicationController
     flash[:notice] = "Matchweek is now active!"
   end
 
-  def lock
-    @matchweek = Matchweek.find(params[:id])
-    @matchweek.locked!
-    flash[:notice] = "Matchweek is now locked!"
-  end
-
   def archive
     @matchweek = Matchweek.find(params[:id])
     @matchweek.archived!

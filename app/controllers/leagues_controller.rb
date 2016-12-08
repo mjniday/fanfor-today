@@ -1,56 +1,53 @@
 class LeaguesController < ApplicationController
+  LEAGUE_TABLE_URL = "http://api.football-data.org/v1/competitions/426/leagueTable".freeze
+
   def index
     @leagues = current_user.leagues.all
   end
 
   def show
-    if current_user.leagues.include?(League.find(params[:id]))
-      @league = League.find(params[:id])
-      if Matchweek.find_by(:status => :activated) == nil && Matchweek.find_by(:status => :locked) == nil
-        @no_active_matchweek = "There are no active matchweeks. Check back later"
-      elsif Matchweek.find_by(:status => :activated)
-        @active_matchweek = Matchweek.find_by(:status => :activated)
-        # @current_pick = @league.picks.find_by(:user_id => current_user.id)
-        @current_pick = current_user.picks.where("league_id = ? AND matchweek_id = ?",@league.id,@active_matchweek.id).first
+    return unless current_user.leagues.include?(league)
 
-        # Pick dropdown
-        # All teams active in the current matchweek
+    if Matchweek.activated.empty?
+      @no_active_matchweek = "There are no active matches. Check back later."
+
+    elsif Matchweek.activated.present?
+      @active_matchweek = get_active_matchweek
+
+      unless @active_matchweek.locked?
+        @current_pick = pick_for_matchweek(@active_matchweek.id)
+
         team_ids = @active_matchweek.fixtures.pluck(:home_team_id,:away_team_id).flatten
-        all_teams = team_ids.map{|t| Team.find(t)}
-        # remove teams I've picked in previous matchweeks
+        all_teams = team_ids.map{|team_id| Team.find(team_id)}
         picked_teams = @league.picks.where(:user_id => current_user.id).pluck(:team_id).map{|t| Team.find(t)}
         remaining_teams = all_teams - picked_teams
-        @remaining_teams = remaining_teams.sort_by{|t| t[:name]}
-      elsif Matchweek.find_by(:status => :locked)
-        @locked_matchweek = Matchweek.find_by(:status => :locked)
+        @remaining_teams = remaining_teams.sort_by{|team| team[:name]}
 
-        if current_user.picks.where("league_id = ? AND matchweek_id = ?", @league.id, @locked_matchweek.id).first
-          @locked_pick = Team.find(current_user.picks.where("league_id = ? AND matchweek_id = ?", @league.id, @locked_matchweek.id).first.team_id).name
+      else
+        @locked_matchweek = get_active_matchweek
+        if pick_for_matchweek(@locked_matchweek.id)
+          @locked_pick = Team.find(pick_for_matchweek(@active_matchweek.id).team_id).name
         else
-          @locked_pick = "You didn't make a selection this week"
+          @locked_pick = "You didn't make a selection this week."
         end
-      else
-        # ... not sure what might fall here
       end
-
-      # Current fixture list
-      if @active_matchweek
-        @fixtures = @active_matchweek.fixtures
-      elsif @locked_matchweek
-        @fixtures = @locked_matchweek.fixtures
-      else
-        @fixtures = []
-      end
-
-      # My historical picks
-      @picks = @league.picks.where(:user_id => current_user)
-
-      # League Standings
-      @users = get_player_standings.sort_by {|user| [-user[:result_points],-user[:result_gd]]}
     end
 
+    # Current fixture list
+    if @active_matchweek
+      @fixtures = @active_matchweek.fixtures
+    else
+      @fixtures = []
+    end
+
+    # My historical picks
+    @picks = @league.picks.where(:user_id => current_user)
+
+    # League Standings
+    @users = get_player_standings.sort_by {|user| [-user[:result_points],-user[:result_gd]]}
+
     # League Table
-    @table = get_league_table
+    @table = get_league_table['standing']
   end
 
   def new
@@ -76,6 +73,7 @@ class LeaguesController < ApplicationController
   end
 
   private
+
   def league_params
     params.require(:league).permit(:name)
   end
@@ -94,8 +92,22 @@ class LeaguesController < ApplicationController
   end
 
   def get_league_table
-    url = "http://api.football-data.org/v1/competitions/426/leagueTable"
-    response = HTTParty.get(url,:headers => {"X-Auth-Token" => ENV['football_data']}).parsed_response
-    response['standing']
+    response = HTTParty.get(LEAGUE_TABLE_URL,
+                              :headers => {
+                                "X-Auth-Token" => ENV['football_data']
+                              }
+                            ).parsed_response
+  end
+
+  def get_active_matchweek
+    Matchweek.find_by(:status => :activated)
+  end
+
+  def league
+    @league ||= League.find(params[:id])
+  end
+
+  def pick_for_matchweek(matchweek_id)
+    current_user.picks.find_by(league_id: league.id, matchweek_id: matchweek_id)
   end
 end

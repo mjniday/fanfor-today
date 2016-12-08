@@ -1,13 +1,17 @@
 <%= form_for([@fixture.matchweek,@fixture]) do |f| %>
-	<%= f.collection_select :home_team_id, Team.all, :id, :name %>
+  <div>
+  	<%= f.collection_select :home_team_id, Team.all, :id, :name %>
+    <%= f.label :home_team_score %>:
+    <%= f.number_field :home_team_score %>
+	</div><br />
+  <div>
+  	<%= f.label :away_team_score %>:
+  	<%= f.number_field :away_team_score %>
 
-  	<%= f.label :home_team_score %>:
-  	<%= f.number_field :home_team_score %><br />
-	
-	<%= f.label :away_team_score %>:
-	<%= f.number_field :away_team_score %><br />
-
-	<%= f.collection_select :away_team_id, Team.all, :id, :name %>
-
+  	<%= f.collection_select :away_team_id, Team.all, :id, :name %>
+  </div><br />
+  <div>
+    <%= f.date_field :date %>
+  </div><br />
 	<%= f.submit %>
 <% end %>

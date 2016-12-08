@@ -1,6 +1,5 @@
 <h1>Matchweek #<%= @matchweek.week %> | Status: <%= @matchweek.status %></h1>
 <p><%= link_to "Activate Matchweek", activate_matchweek_path(@matchweek), method: :post %> |
-<%= link_to "Lock Matchweek", lock_matchweek_path(@matchweek), method: :post %> |
 <%= link_to "Archive Matchweek", archive_matchweek_path(@matchweek), method: :post %> |
 <%= link_to "Populate or Update Fixtures", populate_matchweek_fixtures_matchweek_path(@matchweek), method: :post %></p>
 <hr>

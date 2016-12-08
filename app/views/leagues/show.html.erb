@@ -3,17 +3,26 @@
     <h1 class="f3"><%= @league.name %></h1>
     <div class="center mw7">
       <% if @no_active_matchweek %>
-        <%= @no_active_matchweek %>
+        <h2 class="tc f4"><%= @no_active_matchweek %></h2>
       <% elsif @active_matchweek %>
-        <h1 class="f4">Matchweek #<%= @active_matchweek.week %> Selection</h1>
+        <h1 class="f4">
+          Matchweek #<%= @active_matchweek.week %> Selection
+          <% if Time.now > @active_matchweek.fixtures.pluck(:date).min %>
+            <span class="f5 red italic">[LOCKED]</span>
+          <% end %>
+        </h1>
         <% if @current_pick %>
           <div class="center mw6">
             <h4 class="tc f5 black-70">This week you selected</h4>
             <h2 class="tc f4"><%= Team.find(@current_pick.team_id).name %></h2>
-            <h4 class="tc f5 black-70"><%= Team.find(@current_pick.fixture.home_team_id).name %> versus <%= Team.find(@current_pick.fixture.away_team_id).name %></h4>
+            <h4 class="tc f5 black-70">
+              <%= Team.find(@current_pick.fixture.home_team_id).name %>
+              versus 
+              <%= Team.find(@current_pick.fixture.away_team_id).name %>  
+            </h4>
             <div class="tc"><%= button_to "Change Selection", pick_path(@current_pick.id), method: :delete, :class => "bg-green white w-100 f5 pa2 mv2 br1 ba b--green pointer dim" %></div>
           </div>
-        <% else %>
+        <% elsif @remaining_teams %>
           <div class="styled-select center mw6 br1">
             <%= form_for(Pick.new) do |f| %>
               <%= f.collection_select :team_id, @remaining_teams, :id, :name, {},{:class => "w-100 bg-transparent pa2 f4 input-reset pointer"} %>
@@ -21,31 +30,32 @@
               <%= f.submit "Select Team", {:class => "bg-green white w-100 f5 pa2 mv2 br1 ba b--green pointer dim"} %>
             <% end %>
           </div>
+        <% elsif @locked_pick %>
+          <h4 class="tc f5 black-70">This week you selected</h4>
+          <h2 class="tc f4"><%= @locked_pick %></h2>
         <% end %>
-      <% elsif @locked_pick %>
-        <h1 class="f4">Matchweek #<%= @locked_matchweek.week %> Locked</h1>
-        <h4 class="tc f5 black-70">This week you selected</h4>
-        <h2 class="tc f4"><%= @locked_pick %></h2>
       <% end %>
     </div>
 
-    <div class="center mw7 pt3">
-      <h1 class="f4">Current Matchweek Fixtures</h1>
-      <div class="flex flex-row flex-wrap">
-        <% @fixtures.each do |f| %>
-          <div class="w-100 w-40-l mh4-l pa2 mt2 br1 shadow-2">
-            <div class="w-70 dib">
-              <div class="f5 black-70"><%= Team.find(f.home_team_id).name %></div>
-              <div class="f5 black-70 pt2"><%= Team.find(f.away_team_id).name %></div>
+    <% unless @fixtures.empty? %>
+      <div class="center mw7 pt3">
+        <h1 class="f4">Current Matchweek Fixtures</h1>
+        <div class="flex flex-row flex-wrap">
+          <% @fixtures.each do |f| %>
+            <div class="w-100 w-40-l mh4-l pa2 mt2 br1 shadow-2">
+              <div class="w-70 dib">
+                <div class="f5 black-70"><%= Team.find(f.home_team_id).name %></div>
+                <div class="f5 black-70 pt2"><%= Team.find(f.away_team_id).name %></div>
+              </div>
+              <div class="w-20 dib tr">
+                <div class="f5 black-70"><%= f.home_team_score ? f.home_team_score : "-" %></div>
+                <div class="f5 black-70 pt2"><%= f.away_team_score ? f.away_team_score : "-" %></div>
+              </div>
             </div>
-            <div class="w-20 dib tr">
-              <div class="f5 black-70"><%= f.home_team_score ? f.home_team_score : "-" %></div>
-              <div class="f5 black-70 pt2"><%= f.away_team_score ? f.away_team_score : "-" %></div>
-            </div>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <article class="pt3 mw7 center">
       <h1 class="f4 center mw7">Current Standings</h1>
@@ -74,10 +84,10 @@
       </ul>
     </article>
 
-    <% if @locked_matchweek %>
+    <% if @active_matchweek && @active_matchweek.locked? && @active_matchweek.picks.present? %>
       <main class="pt3 mw7 center">
         <h1 class="f4">This week's picks</h1>
-        <% @locked_matchweek.picks.where(:league_id => @league.id).each do |pick| %>
+        <% @active_matchweek.picks.where(:league_id => @league.id).each do |pick| %>
           <article class="dt bb b--black-05 w-100 pb2 mt2" href="#0">
             <div class="dtc w2 w3-ns v-mid">
               <img src="" class="ba b--black-10 db br2 w2 w3-ns h2 h3-ns"/>

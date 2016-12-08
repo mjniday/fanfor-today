@@ -16,7 +16,6 @@ Rails.application.routes.draw do
     resources :fixtures
   	member do
   		post 'activate'
-      post 'lock'
       post 'archive'
       post 'populate_matchweek_fixtures'
   	end
