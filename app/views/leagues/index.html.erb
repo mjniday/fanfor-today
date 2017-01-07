@@ -1,7 +1,21 @@
 <h3>Your Leagues</h3>
-<% @leagues.each do |league| %>
-	<p><%= link_to "Go To League: #{league.name}", league_path(league) %></p>
-<% end %>
 
+<article>
+  <ul class="list pl0 ml0 center mw7 ba b--light-silver br2">
+    <li class="bg-green white ph3 pv3 bb b--light-silver">
+      <span class="w-80 w-70-ns dib">League Name</span>
+      <span class="w-10 w-20-ns dib-ns dn">Created</span>
+    </li>
+    <% @leagues.each do |league| %>
+      <%= link_to league_path(league), html_options = {:class => "no-underline"} do %>
+        <li class="ph3 pv3 bb b--light-silver bg-animate no-underline bg-white hover-bg-light-green black">
+          <div class="w-80 w-70-ns dib"><%= league.name %></div>
+          <div class="w-10 w-20-ns dib-ns dn"><%= league.created_at.to_date %></div>
+          <div class="right-caret"></div>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</article>
 
 <%= link_to "Set Up New League", new_league_path %>
