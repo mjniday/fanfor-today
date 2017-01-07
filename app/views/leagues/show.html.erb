@@ -2,6 +2,28 @@
   <div class="fl w-100 w-70-l">
     <h1 class="f3"><%= @league.name %></h1>
     <div class="center mw7">
+      <h1 class="f4">Rules</h1>
+      <div class="center mw7">
+        <div class="mt3 relative h2">
+          <span class="absolute top-0 left-0 bg-green pa2 white">1</span>
+          <div class="ml4 w-70">Pick one team to win each week.</div>
+        </div>
+        <div class="mt3 relative h2">
+          <span class="absolute top-0 left-0 bg-green pa2 white">2</span>
+          <div class="ml4 w-70">Each team can only be chosen once per season.</div>
+        </div>
+        <div class="mt3 relative h2">
+          <span class="absolute top-0 left-0 bg-green pa2 white">3</span>
+          <div class="ml4 w-70">All picks must be in by the time the first match starts each week.</div>
+        </div>
+        <div class="mt3 relative h2">
+          <span class="absolute top-0 left-0 bg-green pa2 white">4</span>
+          <div class="ml4 w-70">3 Points for a win. One point for a draw. +/- for goal difference.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="center mw7 pt3">
       <% if @no_active_matchweek %>
         <h2 class="tc f4"><%= @no_active_matchweek %></h2>
       <% elsif @active_matchweek %>
@@ -42,7 +64,7 @@
         <h1 class="f4">Current Matchweek Fixtures</h1>
         <div class="flex flex-row flex-wrap">
           <% @fixtures.each do |f| %>
-            <div class="w-100 w-40-l mh4-l pa2 mt2 br1 shadow-2">
+            <div class="w-100 w-40-l mh4-l pa2 mt2 br1 shadow-1">
               <div class="w-70 dib">
                 <div class="f5 black-70"><%= Team.find(f.home_team_id).name %></div>
                 <div class="f5 black-70 pt2"><%= Team.find(f.away_team_id).name %></div>
